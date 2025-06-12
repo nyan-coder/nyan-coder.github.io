@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Interativa - LogiqScript</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- 
+        Chosen Palette: Warm Neutral Study
+        Application Structure Plan: A single-page application with a tab-based navigation. This structure was chosen because it allows users to quickly jump between different language concepts without scrolling, creating an app-like experience. The user flow is simple: select a topic from the navigation bar (e.g., 'Funções') to view its dedicated documentation, syntax, and code examples in the main content area. This is more usable and engaging for learning a new language than a static, linear document.
+        Visualization & Content Choices: Report Info: LogiqScript syntax and examples. -> Goal: Inform and teach effectively. -> Viz/Presentation Method: The core content is presented as formatted text and styled code blocks. Code blocks use a dark theme with custom syntax highlighting (achieved with <span>s and CSS) to improve readability and simulate a real code editor. -> Interaction: 1) Tab Navigation: Clicking a tab instantly displays the relevant content section, managed by JavaScript. 2) Copy-to-Clipboard: Each code example has a 'Copiar' button, providing a practical utility for the user. -> Justification: This approach transforms static documentation into a functional and interactive learning tool. It organizes information clearly and adds practical features that aid the learning process. -> Library/Method: Vanilla JS for all interactions and Tailwind CSS for styling.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #403A3A;
+        }
+        .font-fira {
+            font-family: 'Fira Code', monospace;
+        }
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active {
+            color: #0A6076;
+            border-bottom-color: #0A6076;
+        }
+        .code-block {
+            background-color: #282c34;
+            color: #abb2bf;
+        }
+        .code-keyword { color: #c678dd; }
+        .code-string { color: #98c379; }
+        .code-comment { color: #5c6370; }
+        .code-number { color: #d19a66; }
+        .code-function { color: #61afef; }
+        .code-type { color: #e5c07b; } /* Cor para tipos/classes */
+    </style>
+</head>
+<body class="antialiased">
+    <div class="min-h-screen">
+        <header class="bg-white/60 backdrop-blur-md shadow-sm sticky top-0 z-10">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <h1 class="text-2xl sm:text-3xl font-bold text-[#0A6076]">LogiqScript</h1>
+                    <nav id="nav-tabs" class="hidden sm:flex items-center space-x-2 lg:space-x-4 flex-wrap">
+                        <!-- Navegação Desktop será gerada aqui -->
+                    </nav>
+                     <div class="sm:hidden">
+                        <select id="mobile-nav-tabs" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0A6076] focus:ring focus:ring-[#0A6076] focus:ring-opacity-50">
+                            <!-- Navegação Mobile será gerada aqui -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+            <div id="tab-content" class="max-w-4xl mx-auto">
+                <!-- Conteúdo das abas será gerado aqui -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const docSections = [
+                { 
+                    id: 'inicio', 
+                    title: 'Início', 
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Bem-vindo à Documentação Interativa do LogiqScript</h2>
+                        <p class="text-lg text-gray-700">Esta é uma guia de referência para a linguagem de script LogiqScript. LogiqScript foi projetada para ser simples e intuitiva, ideal para iniciantes em programação. Navegue pelas abas acima para explorar os recursos da linguagem, ver a sintaxe e exemplos práticos que você pode copiar e usar.</p>
+                    ` 
+                },
+                { 
+                    id: 'fundamentos', 
+                    title: 'Fundamentos', 
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Fundamentos da Linguagem</h2>
+                        <p class="text-lg text-gray-700">Aqui estão os blocos de construção básicos da LogiqScript: variáveis, impressão de dados e comentários.</p>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Variáveis (let)</h3>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">let</span> idade = <span class="code-number">25</span>
+<span class="code-keyword">let</span> nome = <span class="code-string">"Maria"</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Imprimir na Tela (print)</h3>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># 'print' é uma palavra-chave, não uma função. Não use parênteses.</span>
+<span class="code-keyword">print</span> <span class="code-string">"Olá, "</span> + nome</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Comentários (#)</h3>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># Isto é um comentário. O interpretador ignora esta linha.</span>
+<span class="code-keyword">let</span> x = <span class="code-number">10</span> <span class="code-comment"># Isso também é um comentário.</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    ` 
+                },
+                {
+                    id: 'condicionais',
+                    title: 'Condicionais',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Estruturas Condicionais (if/else)</h2>
+                        <p class="text-lg text-gray-700">Permitem que seu programa tome decisões e execute diferentes blocos de código com base em condições lógicas. A estrutura começa com \`if\`, pode ter um bloco \`else\` opcional, e termina com \`end\`.</p>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Sintaxe</h3>
+                            <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">if</span> &lt;condição&gt;
+    <span class="code-comment"># Bloco de código se a condição for verdadeira</span>
+<span class="code-keyword">else</span>
+    <span class="code-comment"># Bloco de código se a condição for falsa (opcional)</span>
+<span class="code-keyword">end</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Exemplo</h3>
+                            <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">let</span> idade = <span class="code-number">20</span>
+<span class="code-keyword">if</span> idade >= <span class="code-number">18</span>
+    <span class="code-keyword">print</span> <span class="code-string">"É maior de idade."</span>
+<span class="code-keyword">else</span>
+    <span class="code-keyword">print</span> <span class="code-string">"É menor de idade."</span>
+<span class="code-keyword">end</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 'loops',
+                    title: 'Laços de Repetição',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Laços de Repetição</h2>
+                        <p class="text-lg text-gray-700">Laços são usados para executar um bloco de código repetidamente. LogiqScript suporta o laço \`while\`.</p>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Laço \`while\`</h3>
+                            <p class="text-gray-700 mb-4">Executa um bloco de código enquanto uma condição for verdadeira.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">let</span> contador = <span class="code-number">0</span>
+<span class="code-keyword">while</span> contador < <span class="code-number">5</span>
+    <span class="code-keyword">print</span> <span class="code-string">"Número: "</span> + <span class="code-function">to_string</span>(contador)
+    <span class="code-keyword">let</span> contador = contador + <span class="code-number">1</span>
+<span class="code-keyword">end</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 'estruturas_dados',
+                    title: 'Estruturas de Dados',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Estruturas de Dados</h2>
+                        <p class="text-lg text-gray-700">Armazene coleções de dados usando Listas e Dicionários.</p>
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Listas (Arrays)</h3>
+                            <p class="text-gray-700 mb-4">Uma coleção ordenada de itens. Para acessar um item, use colchetes <code class="font-fira text-sm bg-gray-200 p-1 rounded">[]</code> com a posição (índice), começando em 0.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">let</span> minha_lista = [<span class="code-number">10</span>, <span class="code-string">"ola"</span>, <span class="code-number">25</span>]
+<span class="code-keyword">print</span> minha_lista[<span class="code-number">1</span>] <span class="code-comment"># Acessa o segundo item, imprimindo "ola"</span>
+<span class="code-keyword">print</span> <span class="code-string">"O tamanho da lista é: "</span> + <span class="code-function">to_string</span>(<span class="code-function">len</span>(minha_lista))</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-semibold mb-3">Dicionários (Mapas)</h3>
+                            <p class="text-gray-700 mb-4">Uma coleção de pares chave-valor. As chaves devem ser strings. O acesso também é feito com <code class="font-fira text-sm bg-gray-200 p-1 rounded">[]</code>, usando a chave.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-keyword">let</span> usuario = {
+    <span class="code-string">"nome"</span>: <span class="code-string">"Carlos"</span>,
+    <span class="code-string">"idade"</span>: <span class="code-number">30</span>
+}
+<span class="code-keyword">print</span> <span class="code-string">"Nome: "</span> + usuario[<span class="code-string">"nome"</span>]</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    id: 'funcoes',
+                    title: 'Funções',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Funções</h2>
+                        <p class="text-lg text-gray-700">Funções são blocos de código reutilizáveis. Use <code class="font-fira text-sm bg-gray-200 p-1 rounded">()</code> para chamar uma função e passar argumentos. Elas podem retornar valores usando a palavra-chave \`return\`.</p>
+                         <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                            <pre><code><span class="code-keyword">func</span> <span class="code-function">somar</span>(a, b)
+    <span class="code-keyword">return</span> a + b
+<span class="code-keyword">end</span>
+<span class="code-keyword">let</span> resultado = <span class="code-function">somar</span>(<span class="code-number">15</span>, <span class="code-number">10</span>) 
+<span class="code-keyword">print</span> resultado</code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                        </div>
+                    `
+                },
+                {
+                    id: 'automation_web',
+                    title: 'Automação & Web',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Automação e Web</h2>
+                        <p class="text-lg text-gray-700">LogiqScript pode interagir com o seu computador e com a internet através de classes embutidas poderosas.</p>
+                        
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-semibold mb-3">Tipo Embutido: InputManager</h3>
+                            <p class="text-gray-700 mb-4">A classe <code class="font-fira text-sm bg-gray-200 p-1 rounded code-type">InputManager</code> permite controlar o mouse e o teclado para automação de tarefas.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># Cuidado! Este código moverá seu mouse.</span>
+<span class="code-keyword">let</span> bot = <span class="code-type">InputManager</span>()
+
+<span class="code-comment"># Move o mouse para a coordenada x=500, y=500</span>
+bot.move(<span class="code-number">500</span>, <span class="code-number">500</span>)
+bot.click_left()
+
+<span class="code-comment"># Escreve um texto onde o cursor estiver</span>
+bot.write(<span class="code-string">"LogiqScript na automação!"</span>, <span class="code-number">0.1</span>)
+
+<span class="code-keyword">let</span> pos = bot.mouse_position()
+<span class="code-keyword">print</span> <span class="code-string">"Posição final: "</span> + <span class="code-function">to_string</span>(pos)</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-semibold mb-3">Tipo Embutido: Https</h3>
+                            <p class="text-gray-700 mb-4">A classe <code class="font-fira text-sm bg-gray-200 p-1 rounded code-type">Https</code> faz requisições web para APIs e sites.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># Faz uma requisição para uma API de piadas</span>
+<span class="code-keyword">let</span> req = <span class="code-type">Https</span>(<span class="code-string">"https://official-joke-api.appspot.com/random_joke"</span>)
+
+<span class="code-keyword">print</span> <span class="code-string">"Status da requisição: "</span> + <span class="code-function">to_string</span>(req.status())
+
+<span class="code-keyword">if</span> req.status() == <span class="code-number">200</span>
+    <span class="code-keyword">let</span> piada_json = req.json()
+    <span class="code-keyword">print</span> piada_json[<span class="code-string">"setup"</span>]
+    <span class="code-comment"># (Você precisaria de uma função de 'esperar' aqui para o timing)</span>
+    <span class="code-keyword">print</span> piada_json[<span class="code-string">"punchline"</span>]
+<span class="code-keyword">else</span>
+    <span class="code-keyword">print</span> <span class="code-string">"Falha ao buscar piada."</span>
+<span class="code-keyword">end</span></code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    `
+                },
+                 {
+                    id: 'erros',
+                    title: 'Tratamento de Erros',
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Tratamento de Erros</h2>
+                        <p class="text-lg text-gray-700">Lide com erros em tempo de execução de forma controlada usando um bloco \`try/catch\`.</p>
+                         <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                            <pre><code><span class="code-keyword">try</span>
+    <span class="code-keyword">print</span> <span class="code-string">"Tentando dividir..."</span>
+    <span class="code-keyword">let</span> resultado = <span class="code-number">10</span> / <span class="code-number">0</span>
+<span class="code-keyword">catch</span>
+    <span class="code-keyword">print</span> <span class="code-string">"Opa! Ocorreu um erro."</span>
+<span class="code-keyword">end</span>
+<span class="code-keyword">print</span> <span class="code-string">"O programa continua."</span></code></pre>
+                            <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                        </div>
+                    `
+                },
+                { 
+                    id: 'importacoes', 
+                    title: 'Importações', 
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Importações: Reutilizando Código</h2>
+                        <p class="text-lg text-gray-700">LogiqScript permite que você reutilize código de outros arquivos através da palavra-chave \`import\`.</p>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-2xl font-semibold mb-3">Importando arquivos .lqs</h3>
+                            <p class="text-gray-700 mb-4">Você pode importar funções e variáveis de outro arquivo LogiqScript.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># Arquivo: main.lqs</span>
+<span class="code-keyword">import</span> <span class="code-string">"helpers.lqs"</span>
+
+<span class="code-function">saudacao</span>(<span class="code-string">"Mundo"</span>)</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <h3 class="text-2xl font-semibold mb-3">Utilizando Funções Python (.py)</h3>
+                            <p class="text-gray-700 mb-4">Crie uma ponte para bibliotecas Python e chame suas funções diretamente.</p>
+                             <div class="code-block rounded-lg p-4 font-fira text-sm relative">
+                                <pre><code><span class="code-comment"># Arquivo: main.lqs</span>
+<span class="code-keyword">import</span> <span class="code-string">"matematica.py"</span>
+
+<span class="code-keyword">let</span> p = <span class="code-function">potencia</span>(<span class="code-number">2</span>, <span class="code-number">8</span>) 
+<span class="code-keyword">print</span> p</code></pre>
+                                <button class="copy-btn absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded-md text-xs">Copiar</button>
+                            </div>
+                        </div>
+                    `
+                },
+                { 
+                    id: 'embutidos', 
+                    title: 'Funções Embutidas', 
+                    content: `
+                        <h2 class="text-3xl font-bold tracking-tight text-[#0A6076]">Funções Embutidas (Built-in)</h2>
+                        <p class="text-lg text-gray-700">Algumas funções são tão úteis que estão sempre disponíveis. Lembre-se: <span class="font-semibold">todas as funções são chamadas com parênteses ()</span>.</p>
+                        <ul class="list-disc list-inside mt-4 space-y-2">
+                            <li><code class="font-fira text-sm bg-gray-200 p-1 rounded">len(item)</code>: Retorna o comprimento de uma string, lista ou dicionário.</li>
+                            <li><code class="font-fira text-sm bg-gray-200 p-1 rounded">type(item)</code>: Retorna o tipo do item ("string", "number", "list", etc.).</li>
+                            <li><code class="font-fira text-sm bg-gray-200 p-1 rounded">append(lista, item)</code>: Adiciona um item ao final de uma lista.</li>
+                            <li><code class="font-fira text-sm bg-gray-200 p-1 rounded">to_string(item)</code>: Converte um item para uma string.</li>
+                            <li><code class="font-fira text-sm bg-gray-200 p-1 rounded">to_number(item)</code>: Tenta converter um item para um número.</li>
+                        </ul>
+                    ` 
+                }
+            ];
+
+            const navTabsContainer = document.getElementById('nav-tabs');
+            const mobileNavTabsContainer = document.getElementById('mobile-nav-tabs');
+            const tabContentContainer = document.getElementById('tab-content');
+
+            docSections.forEach((section, index) => {
+                const isActive = index === 0;
+                const dtButton = document.createElement('button');
+                dtButton.className = `tab-btn px-3 py-2 text-sm lg:text-base font-medium ${isActive ? 'active' : ''}`;
+                dtButton.dataset.tab = section.id;
+                dtButton.textContent = section.title;
+                navTabsContainer.appendChild(dtButton);
+
+                const mbOption = document.createElement('option');
+                mbOption.value = section.id;
+                mbOption.textContent = section.title;
+                mobileNavTabsContainer.appendChild(mbOption);
+
+                const sectionEl = document.createElement('section');
+                sectionEl.id = section.id;
+                sectionEl.className = `tab-pane space-y-6 ${isActive ? '' : 'hidden'}`;
+                sectionEl.innerHTML = section.content;
+                tabContentContainer.appendChild(sectionEl);
+            });
+            
+            const desktopTabs = document.querySelectorAll('#nav-tabs .tab-btn');
+            const mobileSelect = document.getElementById('mobile-nav-tabs');
+            
+            function showTab(tabId) {
+                document.querySelectorAll('#tab-content .tab-pane').forEach(pane => {
+                    pane.classList.toggle('hidden', pane.id !== tabId);
+                });
+
+                desktopTabs.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
+                
+                if (mobileSelect.value !== tabId) {
+                    mobileSelect.value = tabId;
+                }
+            }
+            
+            desktopTabs.forEach(tab => {
+                tab.addEventListener('click', () => showTab(tab.dataset.tab));
+            });
+
+            mobileSelect.addEventListener('change', (e) => showTab(e.target.value));
+            
+            tabContentContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('copy-btn')) {
+                    const button = e.target;
+                    const pre = button.previousElementSibling;
+                    const codeText = pre.innerText;
+                    
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        button.innerText = 'Copiado!';
+                        setTimeout(() => {
+                           button.innerText = 'Copiar';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Falha ao copiar texto: ', err);
+                        button.innerText = 'Erro';
+                         setTimeout(() => {
+                           button.innerText = 'Copiar';
+                        }, 2000);
+                    });
+                }
+            });
+
+            showTab('inicio');
+        });
+    </script>
+</body>
+</html>
